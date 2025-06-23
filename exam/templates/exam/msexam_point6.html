@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список экзаменов</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+        }
+        .header {
+            background-color: #eee;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .exam-card {
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+            padding: 10px;
+        }
+        .label {
+            font-weight: bold;
+        }
+        .exam-image {
+            max-width: 200px;
+            max-height: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Список опубликованных экзаменов</h1>
+        <h2>Шатило Михаил Сергеевич | Группа: 231-323</h2>
+    </div>
+
+    {% if exams %}
+        {% for exam in exams %}
+            <div class="exam-card">
+                <h3>{{ exam.name }}</h3>
+                <p><span class="label">Дата создания:</span> {{ exam.created_date|date:"d.m.Y H:i" }}</p>
+                <p><span class="label">Дата проведения:</span> {{ exam.exam_date|date:"d.m.Y H:i" }}</p>
+                <p><span class="label">Статус:</span> {% if exam.is_public %}Опубликовано{% else %}Не опубликовано{% endif %}</p>
+                
+                <p class="label">Студенты:</p>
+                <ul>
+                    {% for student in exam.students.all %}
+                        <li>{{ student.username }} ({{ student.email }})</li>
+                    {% empty %}
+                        <li>Студенты не назначены</li>
+                    {% endfor %}
+                </ul>
+                
+                {% if exam.image %}
+                    <p class="label">Изображение задания:</p>
+                    <img src="{{ exam.image.url }}" alt="Изображение задания" class="exam-image">
+                {% else %}
+                    <p>Изображение отсутствует</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Нет опубликованных экзаменов.</p>
+    {% endif %}
+</body>
+</html>
